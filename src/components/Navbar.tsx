@@ -10,6 +10,7 @@ const navLinks = [
   { name: "Sell", href: "/sell" },
   { name: "Agents", href: "/agents" },
   { name: "Neighborhoods", href: "/neighborhoods" },
+  { name: "Contact", href: "/contact" },
 ];
 
 export function Navbar() {

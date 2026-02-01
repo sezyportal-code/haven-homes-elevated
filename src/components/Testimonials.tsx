@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Star, Quote } from "lucide-react";
+import { FadeInView, StaggerContainer, StaggerItem } from "./AnimationWrappers";
 
 const testimonials = [
   {
@@ -27,15 +28,10 @@ const testimonials = [
 
 export function Testimonials() {
   return (
-    <section className="section-padding bg-secondary">
+    <section className="section-padding bg-secondary overflow-hidden">
       <div className="container-custom">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center max-w-3xl mx-auto mb-16"
-        >
+        <FadeInView className="text-center max-w-3xl mx-auto mb-16">
           <span className="inline-block text-sm font-medium text-primary mb-2 tracking-wider uppercase">
             Client Stories
           </span>
@@ -43,51 +39,66 @@ export function Testimonials() {
             Trusted by Thousands of
             <span className="text-gradient-emerald"> Happy Homeowners</span>
           </h2>
-        </motion.div>
+        </FadeInView>
 
         {/* Testimonials Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
-            <motion.div
-              key={testimonial.name}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.15 }}
-              className="testimonial-card relative"
-            >
-              {/* Quote Icon */}
-              <div className="absolute -top-4 -left-4 w-12 h-12 rounded-full bg-haven-gradient flex items-center justify-center">
-                <Quote className="w-5 h-5 text-primary-foreground" />
-              </div>
+            <StaggerItem key={testimonial.name}>
+              <motion.div
+                whileHover={{ 
+                  y: -10, 
+                  boxShadow: "0 20px 40px -15px rgba(0,0,0,0.15)",
+                  transition: { duration: 0.3 }
+                }}
+                className="testimonial-card relative h-full"
+              >
+                {/* Quote Icon */}
+                <motion.div 
+                  className="absolute -top-4 -left-4 w-12 h-12 rounded-full bg-haven-gradient flex items-center justify-center"
+                  initial={{ rotate: 0 }}
+                  whileHover={{ rotate: 15, scale: 1.1 }}
+                >
+                  <Quote className="w-5 h-5 text-primary-foreground" />
+                </motion.div>
 
-              {/* Stars */}
-              <div className="flex gap-1 mb-4">
-                {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 fill-haven-gold text-haven-gold" />
-                ))}
-              </div>
-
-              {/* Content */}
-              <p className="text-foreground/90 leading-relaxed mb-6 italic">
-                "{testimonial.content}"
-              </p>
-
-              {/* Author */}
-              <div className="flex items-center gap-4">
-                <img
-                  src={testimonial.avatar}
-                  alt={testimonial.name}
-                  className="w-12 h-12 rounded-full object-cover"
-                />
-                <div>
-                  <p className="font-semibold text-foreground">{testimonial.name}</p>
-                  <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+                {/* Stars with animation */}
+                <div className="flex gap-1 mb-4">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, scale: 0 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: i * 0.1, type: "spring" }}
+                    >
+                      <Star className="w-5 h-5 fill-haven-gold text-haven-gold" />
+                    </motion.div>
+                  ))}
                 </div>
-              </div>
-            </motion.div>
+
+                {/* Content */}
+                <p className="text-foreground/90 leading-relaxed mb-6 italic">
+                  "{testimonial.content}"
+                </p>
+
+                {/* Author */}
+                <div className="flex items-center gap-4">
+                  <motion.img
+                    src={testimonial.avatar}
+                    alt={testimonial.name}
+                    className="w-12 h-12 rounded-full object-cover"
+                    whileHover={{ scale: 1.1 }}
+                  />
+                  <div>
+                    <p className="font-semibold text-foreground">{testimonial.name}</p>
+                    <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+                  </div>
+                </div>
+              </motion.div>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
       </div>
     </section>
   );
