@@ -1,0 +1,87 @@
+import { motion } from "framer-motion";
+import { Home, Shield, Users, TrendingUp, MapPin, HeartHandshake } from "lucide-react";
+
+const features = [
+  {
+    icon: Home,
+    title: "Premium Listings",
+    description: "Access thousands of verified luxury properties with detailed information and virtual tours.",
+  },
+  {
+    icon: Shield,
+    title: "Secure Transactions",
+    description: "Industry-leading security protocols protect your data and ensure safe property transactions.",
+  },
+  {
+    icon: Users,
+    title: "Expert Agents",
+    description: "Work with top-rated real estate professionals who understand your unique needs.",
+  },
+  {
+    icon: TrendingUp,
+    title: "Market Insights",
+    description: "Get real-time market data, price trends, and neighborhood analytics to make informed decisions.",
+  },
+  {
+    icon: MapPin,
+    title: "Neighborhood Guides",
+    description: "Explore detailed guides about schools, amenities, safety scores, and local attractions.",
+  },
+  {
+    icon: HeartHandshake,
+    title: "Personalized Service",
+    description: "Receive tailored recommendations and dedicated support throughout your home journey.",
+  },
+];
+
+export function Features() {
+  return (
+    <section className="section-padding bg-background">
+      <div className="container-custom">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center max-w-3xl mx-auto mb-16"
+        >
+          <span className="inline-block text-sm font-medium text-primary mb-2 tracking-wider uppercase">
+            Why Choose Haven Homes
+          </span>
+          <h2 className="text-4xl md:text-5xl font-serif font-medium text-foreground mb-4">
+            The Smarter Way to
+            <span className="text-gradient-emerald"> Find Your Home</span>
+          </h2>
+          <p className="text-lg text-muted-foreground">
+            We combine cutting-edge technology with personalized service to deliver 
+            an unmatched real estate experience.
+          </p>
+        </motion.div>
+
+        {/* Features Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {features.map((feature, index) => (
+            <motion.div
+              key={feature.title}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+              className="feature-card group"
+            >
+              <div className="w-14 h-14 rounded-2xl bg-haven-gradient flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                <feature.icon className="w-7 h-7 text-primary-foreground" />
+              </div>
+              <h3 className="text-xl font-semibold text-foreground mb-3 font-serif">
+                {feature.title}
+              </h3>
+              <p className="text-muted-foreground leading-relaxed">
+                {feature.description}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
