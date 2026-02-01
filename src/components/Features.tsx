@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Home, Shield, Users, TrendingUp, MapPin, HeartHandshake } from "lucide-react";
+import { FadeInView, StaggerContainer, StaggerItem } from "./AnimationWrappers";
 
 const features = [
   {
@@ -39,12 +40,7 @@ export function Features() {
     <section className="section-padding bg-background">
       <div className="container-custom">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center max-w-3xl mx-auto mb-16"
-        >
+        <FadeInView className="text-center max-w-3xl mx-auto mb-16">
           <span className="inline-block text-sm font-medium text-primary mb-2 tracking-wider uppercase">
             Why Choose Haven Homes
           </span>
@@ -56,31 +52,33 @@ export function Features() {
             We combine cutting-edge technology with personalized service to deliver 
             an unmatched real estate experience.
           </p>
-        </motion.div>
+        </FadeInView>
 
         {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {features.map((feature, index) => (
-            <motion.div
-              key={feature.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="feature-card group"
-            >
-              <div className="w-14 h-14 rounded-2xl bg-haven-gradient flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                <feature.icon className="w-7 h-7 text-primary-foreground" />
-              </div>
-              <h3 className="text-xl font-semibold text-foreground mb-3 font-serif">
-                {feature.title}
-              </h3>
-              <p className="text-muted-foreground leading-relaxed">
-                {feature.description}
-              </p>
-            </motion.div>
+        <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {features.map((feature) => (
+            <StaggerItem key={feature.title}>
+              <motion.div
+                whileHover={{ y: -8, transition: { duration: 0.3 } }}
+                className="feature-card group h-full"
+              >
+                <motion.div 
+                  className="w-14 h-14 rounded-2xl bg-haven-gradient flex items-center justify-center mb-6"
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  transition={{ type: "spring", stiffness: 400 }}
+                >
+                  <feature.icon className="w-7 h-7 text-primary-foreground" />
+                </motion.div>
+                <h3 className="text-xl font-semibold text-foreground mb-3 font-serif">
+                  {feature.title}
+                </h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  {feature.description}
+                </p>
+              </motion.div>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
       </div>
     </section>
   );

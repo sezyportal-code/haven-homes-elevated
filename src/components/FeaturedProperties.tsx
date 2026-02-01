@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { PropertyCard } from "./PropertyCard";
+import { FadeInView, StaggerContainer, StaggerItem } from "./AnimationWrappers";
 
 import property1 from "@/assets/property-1.jpg";
 import property2 from "@/assets/property-2.jpg";
@@ -91,11 +92,7 @@ export function FeaturedProperties() {
       <div className="container-custom">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
+          <FadeInView>
             <span className="inline-block text-sm font-medium text-primary mb-2 tracking-wider uppercase">
               Featured Listings
             </span>
@@ -103,13 +100,9 @@ export function FeaturedProperties() {
               Discover Our Finest
               <span className="block text-gradient-emerald">Properties</span>
             </h2>
-          </motion.div>
+          </FadeInView>
           
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-          >
+          <FadeInView direction="right">
             <Link
               to="/listings"
               className="group inline-flex items-center gap-2 text-primary font-medium hover:gap-4 transition-all"
@@ -117,23 +110,17 @@ export function FeaturedProperties() {
               View All Listings
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
-          </motion.div>
+          </FadeInView>
         </div>
 
         {/* Property Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {properties.map((property, index) => (
-            <motion.div
-              key={property.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-            >
+        <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {properties.map((property) => (
+            <StaggerItem key={property.id}>
               <PropertyCard {...property} />
-            </motion.div>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
       </div>
     </section>
   );
