@@ -1,8 +1,16 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Heart, User, Search } from "lucide-react";
+import { Menu, X, Heart, User, Search, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const navLinks = [
   { name: "Buy", href: "/listings" },
@@ -17,6 +25,8 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, signOut, loading } = useAuth();
   const isHomePage = location.pathname === "/";
 
   useEffect(() => {
@@ -26,6 +36,11 @@ export function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/");
+  };
 
   const navbarBg = isScrolled || !isHomePage
     ? "bg-card/95 backdrop-blur-xl shadow-haven-md"
@@ -86,19 +101,64 @@ export function Navbar() {
                 variant="ghost"
                 size="icon"
                 className={`${textColor} hover:bg-white/10`}
+                onClick={() => navigate(user ? "/dashboard" : "/login")}
               >
                 <Heart className="w-5 h-5" />
               </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className={`${textColor} hover:bg-white/10`}
-              >
-                <User className="w-5 h-5" />
-              </Button>
-              <Button className="btn-primary">
-                List Property
-              </Button>
+
+              {!loading && (
+                <>
+                  {user ? (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className={`${textColor} hover:bg-white/10`}
+                        >
+                          <div className="w-8 h-8 rounded-full bg-haven-gradient flex items-center justify-center text-sm font-medium text-white">
+                            {user.email?.[0]?.toUpperCase() || "U"}
+                          </div>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-56">
+                        <div className="px-3 py-2">
+                          <p className="text-sm font-medium">{user.email}</p>
+                        </div>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={() => navigate("/dashboard")}>
+                          <User className="w-4 h-4 mr-2" />
+                          Dashboard
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => navigate("/dashboard")}>
+                          <Heart className="w-4 h-4 mr-2" />
+                          Saved Properties
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={handleSignOut}>
+                          <LogOut className="w-4 h-4 mr-2" />
+                          Sign Out
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  ) : (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className={`${textColor} hover:bg-white/10`}
+                      onClick={() => navigate("/login")}
+                    >
+                      <User className="w-5 h-5" />
+                    </Button>
+                  )}
+                </>
+              )}
+
+              <Link to="/sell">
+                <Button className="btn-primary">
+                  List Property
+                </Button>
+              </Link>
             </div>
 
             {/* Mobile Menu Button */}
@@ -147,10 +207,41 @@ export function Navbar() {
                     </Link>
                   </motion.div>
                 ))}
-                <div className="pt-4 border-t border-border">
-                  <Button className="w-full btn-primary">
-                    List Property
-                  </Button>
+
+                <div className="pt-4 border-t border-border space-y-3">
+                  {!loading && (
+                    <>
+                      {user ? (
+                        <>
+                          <Link
+                            to="/dashboard"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="block py-3 text-lg font-medium text-foreground hover:text-primary transition-colors"
+                          >
+                            Dashboard
+                          </Link>
+                          <Button variant="outline" className="w-full" onClick={handleSignOut}>
+                            <LogOut className="w-4 h-4 mr-2" />
+                            Sign Out
+                          </Button>
+                        </>
+                      ) : (
+                        <div className="flex gap-3">
+                          <Link to="/login" className="flex-1" onClick={() => setIsMobileMenuOpen(false)}>
+                            <Button variant="outline" className="w-full">Sign In</Button>
+                          </Link>
+                          <Link to="/register" className="flex-1" onClick={() => setIsMobileMenuOpen(false)}>
+                            <Button className="w-full btn-primary">Sign Up</Button>
+                          </Link>
+                        </div>
+                      )}
+                    </>
+                  )}
+                  <Link to="/sell" onClick={() => setIsMobileMenuOpen(false)}>
+                    <Button className="w-full btn-primary mt-3">
+                      List Property
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </motion.div>
